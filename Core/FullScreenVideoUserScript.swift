@@ -17,18 +17,63 @@
 //  limitations under the License.
 //
 
+import Foundation
 import WebKit
 import UserScript
+import os.log
 
-public class FullScreenVideoUserScript: NSObject, UserScript {
-    public var source: String {
-        return Self.loadJS("fullscreenvideo", from: Bundle.core)
+public extension Notification.Name {
+    static let sinkerVideoDetected = Notification.Name("sinkerVideoDetected")
+}
+
+public final class FullScreenVideoUserScript: NSObject, UserScript {
+
+    private enum Keys {
+        static let handlerName = "videoPlayHandler"
+        static let action = "action"
+        static let videoDetected = "videoDetected"
+        static let src = "src"
+        static let title = "title"
+        static let referrer = "referrer"
     }
 
-    public var injectionTime: WKUserScriptInjectionTime = .atDocumentStart
+    private let logger = Logger(subsystem: "com.duckduckgo.ios", category: "SinkerVideo")
+
+    public var source: String {
+        Self.loadJS("fullscreenvideo", from: Bundle.core)
+    }
+
+    public var injectionTime: WKUserScriptInjectionTime = .atDocumentEnd
     public var forMainFrameOnly: Bool = false
-    public var messageNames: [String] = []
+    public var messageNames: [String] = [Keys.handlerName]
     public var requiresRunInPageContentWorld: Bool { true }
 
-    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {}
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard message.name == Keys.handlerName,
+              let body = message.body as? [String: Any],
+              let action = body[Keys.action] as? String,
+              action == Keys.videoDetected,
+              let src = body[Keys.src] as? String,
+              let url = URL(string: src),
+              let scheme = url.scheme?.lowercased(),
+              ["http", "https", "blob"].contains(scheme)
+        else {
+            return
+        }
+
+        let title = body[Keys.title] as? String ?? "Unknown Video"
+        let referrer = body[Keys.referrer] as? String ?? ""
+
+        logger.debug("Detected video source: \(src, privacy: .public)")
+
+        NotificationCenter.default.post(
+            name: .sinkerVideoDetected,
+            object: nil,
+            userInfo: [
+                Keys.src: src,
+                Keys.title: title,
+                Keys.referrer: referrer
+            ]
+        )
+    }
 }
