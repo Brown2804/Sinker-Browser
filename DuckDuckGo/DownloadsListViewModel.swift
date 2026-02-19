@@ -37,6 +37,10 @@ enum DownloadsListFilter: Int, CaseIterable {
 
 class DownloadsListViewModel: ObservableObject {
 
+    private enum DefaultsKey {
+        static let defaultFilter = "sinker.downloads.defaultFilter"
+    }
+
     @Published var sections: [DownloadsListSectionViewModel] = []
     @Published var selectedFilter: DownloadsListFilter = .all {
         didSet {
@@ -58,7 +62,12 @@ class DownloadsListViewModel: ObservableObject {
         Logger.general.debug("DownloadsListViewModel init")
 
         self.dataSource = dataSource
-        
+
+        if UserDefaults.standard.string(forKey: DefaultsKey.defaultFilter) == "videos" {
+            selectedFilter = .videos
+            UserDefaults.standard.removeObject(forKey: DefaultsKey.defaultFilter)
+        }
+
         dataSource.$model
             .sink { [weak self] in
                 Logger.general.debug("DownloadsListViewModel changed - ongoing:\($0.ongoingDownloads.count) complete:\($0.completeDownloads.count)")

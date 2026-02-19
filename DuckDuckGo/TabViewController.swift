@@ -146,6 +146,7 @@ class TabViewController: UIViewController {
     private var emailProtectionSignOutCancellable: AnyCancellable?
     private var lastSinkerAutoDownloadURL: String?
     private var lastSinkerAutoDownloadAt: Date = .distantPast
+    private var sinkerQueuedSources: [String: Date] = [:]
 
     public var inferredOpenerContext: BrokenSiteReport.OpenerContext?
     private var refreshCountSinceLoad: Int = 0
@@ -2362,6 +2363,13 @@ extension TabViewController {
         lastSinkerAutoDownloadURL = src
         lastSinkerAutoDownloadAt = Date()
 
+        let now = Date()
+        sinkerQueuedSources = sinkerQueuedSources.filter { now.timeIntervalSince($0.value) < 120 }
+        if sinkerQueuedSources[src] != nil {
+            return
+        }
+        sinkerQueuedSources[src] = now
+
         if scheme == "blob" {
             let addressBarBottom = self.appSettings.currentAddressBarPosition.isBottom
             ActionMessageView.present(message: "Blob stream detected. Direct download support will be added next.",
@@ -2404,6 +2412,7 @@ extension TabViewController {
                                                           downloadSession: downloadSession,
                                                           cookieStore: cookieStore,
                                                           temporary: false) else {
+            sinkerQueuedSources.removeValue(forKey: src)
             return
         }
 

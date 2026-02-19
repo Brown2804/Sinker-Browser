@@ -2168,6 +2168,7 @@ extension MainViewController: OmniBarDelegate {
             Pixel.fire(pixel: .addressBarShare)
             currentTab?.onShareAction(forLink: link, fromView: viewCoordinator.omniBar.accessoryButton)
         case .download:
+            UserDefaults.standard.set("videos", forKey: "sinker.downloads.defaultFilter")
             Pixel.fire(pixel: .downloadsListOpened,
                        withAdditionalParameters: [PixelParameters.originatedFromMenu: "0"])
             segueToDownloads()
