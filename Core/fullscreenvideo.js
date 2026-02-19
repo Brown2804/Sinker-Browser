@@ -33,6 +33,8 @@
     let lastSentSrc = null;
     let lastSentAt = 0;
     const THROTTLE_MS = 1200;
+    const RECENT_VIDEO_URL_LIMIT = 40;
+    const recentVideoUrls = [];
 
     function isAllowedUrl(url) {
         return url && (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('blob:'));
@@ -68,6 +70,55 @@
                lower.includes('application/vnd.apple.mpegurl');
     }
 
+    function rememberVideoUrl(url) {
+        if (!looksLikeDirectVideoUrl(url)) {
+            return;
+        }
+
+        const index = recentVideoUrls.indexOf(url);
+        if (index >= 0) {
+            recentVideoUrls.splice(index, 1);
+        }
+
+        recentVideoUrls.push(url);
+        if (recentVideoUrls.length > RECENT_VIDEO_URL_LIMIT) {
+            recentVideoUrls.shift();
+        }
+    }
+
+    function installNetworkHooks() {
+        if (window.__sinkerNetworkHooked) {
+            return;
+        }
+        window.__sinkerNetworkHooked = true;
+
+        if (typeof window.fetch === 'function') {
+            const originalFetch = window.fetch.bind(window);
+            window.fetch = function () {
+                try {
+                    const request = arguments[0];
+                    const candidate = typeof request === 'string' ? request : (request && request.url);
+                    rememberVideoUrl(candidate);
+                } catch (_) {
+                    // no-op
+                }
+                return originalFetch.apply(this, arguments);
+            };
+        }
+
+        if (window.XMLHttpRequest && window.XMLHttpRequest.prototype) {
+            const originalOpen = window.XMLHttpRequest.prototype.open;
+            window.XMLHttpRequest.prototype.open = function (method, url) {
+                try {
+                    rememberVideoUrl(url);
+                } catch (_) {
+                    // no-op
+                }
+                return originalOpen.apply(this, arguments);
+            };
+        }
+    }
+
     function resolveBlobSource(video) {
         // 1) Try source tags first.
         const sources = video.getElementsByTagName('source');
@@ -88,9 +139,15 @@
                     continue;
                 }
                 if (looksLikeDirectVideoUrl(entry.name)) {
+                    rememberVideoUrl(entry.name);
                     return entry.name;
                 }
             }
+        }
+
+        // 3) Heuristic: recent URLs captured from fetch/XHR interception.
+        if (recentVideoUrls.length > 0) {
+            return recentVideoUrls[recentVideoUrls.length - 1];
         }
 
         return null;
@@ -183,6 +240,8 @@
             observer.observe(document.body, { childList: true, subtree: true });
         }
     }
+
+    installNetworkHooks();
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function () {
