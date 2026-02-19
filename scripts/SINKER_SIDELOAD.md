@@ -27,6 +27,7 @@ EXPORT_OPTIONS_PLIST=alphaAdhocExportOptions.plist scripts/build_sinker_ipa.sh
 
 ## Notes
 - You need a valid signing profile/certificate for archive export.
+- Current environment archive failure is due to missing provisioning profiles for team `HKE973VLUW` (original DuckDuckGo profile names). Update signing to your own team/bundle identifiers before export.
 - For simulator testing, keep using:
 
 ```bash
