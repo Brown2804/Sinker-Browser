@@ -9,6 +9,15 @@ EXPORT_PATH="${EXPORT_PATH:-${ROOT_DIR}/build/Sinker-ipa}"
 EXPORT_OPTIONS_PLIST="${EXPORT_OPTIONS_PLIST:-${ROOT_DIR}/adhocExportOptions.plist}"
 TEAM_ID="${TEAM_ID:-${DEVELOPMENT_TEAM:-}}"
 ALLOW_PROVISIONING_UPDATES="${ALLOW_PROVISIONING_UPDATES:-1}"
+SKIP_SIGNING_PREFLIGHT="${SKIP_SIGNING_PREFLIGHT:-0}"
+
+if [[ "${SKIP_SIGNING_PREFLIGHT}" != "1" ]]; then
+  if ! security find-identity -v -p codesigning 2>/dev/null | grep -qE '[0-9]+\) '; then
+    echo "[Sinker] No code signing identities found in keychain."
+    echo "[Sinker] Install an Apple Development/Distribution certificate or run on a logged-in Xcode account machine."
+    exit 2
+  fi
+fi
 
 mkdir -p "$(dirname "${ARCHIVE_PATH}")"
 mkdir -p "${EXPORT_PATH}"

@@ -31,6 +31,12 @@ If you already installed profiles manually and don't want Xcode auto-provision u
 TEAM_ID=<YOUR_TEAM_ID> ALLOW_PROVISIONING_UPDATES=0 scripts/build_sinker_ipa.sh
 ```
 
+If you intentionally want to skip keychain signing preflight checks:
+
+```bash
+SKIP_SIGNING_PREFLIGHT=1 scripts/build_sinker_ipa.sh
+```
+
 ## 3) Install to iPad (AltStore/SideStore)
 
 1. Open AltStore/SideStore.
