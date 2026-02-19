@@ -23,9 +23,12 @@ perl -pi -e "s/com\\.duckduckgo\\.mobile\\.ios\\.alpha/${BASE_BUNDLE_ID}.alpha/g
 # 2) Remove fixed provisioning profile specifiers to allow automatic signing.
 perl -ni -e 'print unless /PROVISIONING_PROFILE_SPECIFIER\[sdk=iphoneos\*\]/' "${PBXPROJ}"
 
-# 3) Optionally rewrite DEVELOPMENT_TEAM to user team.
+# 3) Rewrite DEVELOPMENT_TEAM entries.
 if [[ -n "${TEAM_ID}" ]]; then
-  perl -pi -e "s/DEVELOPMENT_TEAM = [A-Z0-9]+;/DEVELOPMENT_TEAM = ${TEAM_ID};/g" "${PBXPROJ}"
+  perl -pi -e "s/DEVELOPMENT_TEAM = [A-Z0-9\"]+;/DEVELOPMENT_TEAM = ${TEAM_ID};/g; s/\"DEVELOPMENT_TEAM\[sdk=iphoneos\*\]\" = [A-Z0-9\"]+;/\"DEVELOPMENT_TEAM[sdk=iphoneos*]\" = ${TEAM_ID};/g" "${PBXPROJ}"
+else
+  # Clear hardcoded upstream team IDs to avoid binding to DuckDuckGo signing.
+  perl -pi -e 's/DEVELOPMENT_TEAM = [A-Z0-9]+;/DEVELOPMENT_TEAM = "";/g; s/"DEVELOPMENT_TEAM\[sdk=iphoneos\*\]" = [A-Z0-9]+;/"DEVELOPMENT_TEAM[sdk=iphoneos*]" = "";/g' "${PBXPROJ}"
 fi
 
 # 4) Keep xcconfig app ids aligned.
