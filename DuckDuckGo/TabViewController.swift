@@ -144,6 +144,8 @@ class TabViewController: UIViewController {
     private var failingUrls = Set<String>()
     private var urlProvidedBasicAuthCredential: (credential: URLCredential, url: URL)?
     private var emailProtectionSignOutCancellable: AnyCancellable?
+    private var lastSinkerAutoDownloadURL: String?
+    private var lastSinkerAutoDownloadAt: Date = .distantPast
 
     public var inferredOpenerContext: BrokenSiteReport.OpenerContext?
     private var refreshCountSinceLoad: Int = 0
@@ -459,6 +461,7 @@ class TabViewController: UIViewController {
         addTextZoomObserver()
         subscribeToEmailProtectionSignOutNotification()
         registerForDownloadsNotifications()
+        registerForSinkerNotifications()
         registerForAddressBarLocationNotifications()
         registerForAutofillNotifications()
         
@@ -2335,6 +2338,65 @@ extension TabViewController {
                                                 #selector(downloadDidFinish),
                                                name: .downloadFinished,
                                                object: nil)
+    }
+
+    private func registerForSinkerNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(sinkerVideoDetected),
+                                               name: .sinkerVideoDetected,
+                                               object: nil)
+    }
+
+    @objc private func sinkerVideoDetected(_ notification: Notification) {
+        guard let src = notification.userInfo?["src"] as? String,
+              let url = URL(string: src),
+              let scheme = url.scheme?.lowercased(),
+              ["http", "https", "blob"].contains(scheme) else {
+            return
+        }
+
+        if src == lastSinkerAutoDownloadURL,
+           Date().timeIntervalSince(lastSinkerAutoDownloadAt) < 2 {
+            return
+        }
+        lastSinkerAutoDownloadURL = src
+        lastSinkerAutoDownloadAt = Date()
+
+        if scheme == "blob" {
+            let addressBarBottom = self.appSettings.currentAddressBarPosition.isBottom
+            ActionMessageView.present(message: "Blob stream detected. Direct download support will be added next.",
+                                      presentationLocation: .withBottomBar(andAddressBarBottom: addressBarBottom))
+            return
+        }
+
+        let filename = url.lastPathComponent.isEmpty ? "video.mp4" : url.lastPathComponent
+        let mimeType: String?
+        if src.contains(".m3u8") {
+            mimeType = "application/vnd.apple.mpegurl"
+        } else if src.contains(".mp4") {
+            mimeType = "video/mp4"
+        } else {
+            mimeType = nil
+        }
+
+        let response = URLResponse(url: url,
+                                   mimeType: mimeType,
+                                   expectedContentLength: Int(NSURLSessionTransferSizeUnknown),
+                                   textEncodingName: nil)
+
+        let cookieStore = webView.configuration.websiteDataStore.httpCookieStore
+        let downloadSession = URLDownloadSession(url, cookieStore: cookieStore)
+        let downloadManager = AppDependencyProvider.shared.downloadManager
+
+        guard let download = downloadManager.makeDownload(response: response,
+                                                          suggestedFilename: filename,
+                                                          downloadSession: downloadSession,
+                                                          cookieStore: cookieStore,
+                                                          temporary: false) else {
+            return
+        }
+
+        downloadManager.startDownload(download)
     }
 
     @objc private func downloadDidStart(_ notification: Notification) {
