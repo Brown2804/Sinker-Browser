@@ -25,7 +25,11 @@ class CompleteDownloadRowViewModel: DownloadsListRowViewModel {
 
     init(fileURL: URL) {
         self.fileURL = fileURL
-        self.fileSize = DownloadsListRowViewModel.byteCountFormatter.string(fromByteCount: Int64(fileURL.fileSize))
+        var sizeText = DownloadsListRowViewModel.byteCountFormatter.string(fromByteCount: Int64(fileURL.fileSize))
+        if let sourceHost = DownloadsListRowViewModel.sourceHost(for: fileURL.filename) {
+            sizeText += " · \(sourceHost)"
+        }
+        self.fileSize = sizeText
         super.init(filename: fileURL.filename)
     }
 }

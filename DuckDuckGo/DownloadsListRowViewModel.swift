@@ -64,4 +64,12 @@ extension DownloadsListRowViewModel {
         formatter.isAdaptive = true
         return formatter
     }()
+
+    static func sourceHost(for filename: String) -> String? {
+        UserDefaults.standard.string(forKey: sourceHostKey(filename: filename))
+    }
+
+    private static func sourceHostKey(filename: String) -> String {
+        "sinker.download.host.\(filename)"
+    }
 }

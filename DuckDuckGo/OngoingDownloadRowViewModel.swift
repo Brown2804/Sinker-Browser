@@ -24,11 +24,17 @@ class OngoingDownloadRowViewModel: DownloadsListRowViewModel {
     @Published var fileSize: String = ""
     @Published var progress: Float = 0.0
     var isTotalSizeKnown: Bool
-    
+
+    private let sourceHostSuffix: String
     private var subscribers: Set<AnyCancellable> = []
     
     init(download: Download) {
         isTotalSizeKnown = download.totalBytesExpectedToWrite > 0
+        if let sourceHost = DownloadsListRowViewModel.sourceHost(for: download.filename) {
+            sourceHostSuffix = " · \(sourceHost)"
+        } else {
+            sourceHostSuffix = ""
+        }
         super.init(filename: download.filename)
         subscribeToUpdates(from: download)
     }
@@ -44,8 +50,10 @@ class OngoingDownloadRowViewModel: DownloadsListRowViewModel {
                 if totalSize > 0 {
                     let totalSizeString = DownloadsListRowViewModel.byteCountFormatter.string(fromByteCount: totalSize)
                     self?.fileSize = UserText.downloadProgressMessage(currentSize: currentSizeString, totalSize: totalSizeString)
+                        + (self?.sourceHostSuffix ?? "")
                 } else {
                     self?.fileSize = UserText.downloadProgressMessageForUnknownTotalSize(currentSize: currentSizeString)
+                        + (self?.sourceHostSuffix ?? "")
                 }
             }.store(in: &subscribers)
         

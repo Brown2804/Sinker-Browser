@@ -2407,6 +2407,12 @@ extension TabViewController {
             return
         }
 
+        let referrerHost = (notification.userInfo?["referrer"] as? String).flatMap { URL(string: $0)?.host }
+        let sourceHost = referrerHost ?? url.host
+        if let sourceHost {
+            UserDefaults.standard.set(sourceHost, forKey: "sinker.download.host.\(download.filename)")
+        }
+
         downloadManager.startDownload(download)
     }
 
