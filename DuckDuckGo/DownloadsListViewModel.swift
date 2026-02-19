@@ -23,13 +23,36 @@ import Common
 import Core
 import os.log
 
+enum DownloadsListFilter: Int, CaseIterable {
+    case all
+    case videos
+
+    var title: String {
+        switch self {
+        case .all: return "All"
+        case .videos: return "Videos"
+        }
+    }
+}
+
 class DownloadsListViewModel: ObservableObject {
 
     @Published var sections: [DownloadsListSectionViewModel] = []
+    @Published var selectedFilter: DownloadsListFilter = .all {
+        didSet {
+            applyFilter()
+        }
+    }
+
+    var hasAnyDownloads: Bool {
+        !allSections.isEmpty
+    }
+
     var requestActivityViewHandler: ((_ url: URL, _ sourceRect: CGRect) -> Void)?
     
     private let dataSource: DownloadsListDataSource
     private var subscribers: Set<AnyCancellable> = []
+    private var allSections: [DownloadsListSectionViewModel] = []
     
     init(dataSource: DownloadsListDataSource) {
         Logger.general.debug("DownloadsListViewModel init")
@@ -40,13 +63,29 @@ class DownloadsListViewModel: ObservableObject {
             .sink { [weak self] in
                 Logger.general.debug("DownloadsListViewModel changed - ongoing:\($0.ongoingDownloads.count) complete:\($0.completeDownloads.count)")
 
-                self?.sections = DownloadsListSectioningHelper().makeSections(from: $0.ongoingDownloads + $0.completeDownloads)
+                self?.allSections = DownloadsListSectioningHelper().makeSections(from: $0.ongoingDownloads + $0.completeDownloads)
+                self?.applyFilter()
             }
             .store(in: &subscribers)
     }
     
     deinit {
         Logger.general.debug("DownloadsListViewModel deinit")
+    }
+
+    private func applyFilter() {
+        switch selectedFilter {
+        case .all:
+            sections = allSections
+        case .videos:
+            sections = allSections.compactMap { section in
+                let videoRows = section.rows.filter { $0.isVideo }
+                guard !videoRows.isEmpty else { return nil }
+                return DownloadsListSectionViewModel(date: section.date,
+                                                     header: section.header,
+                                                     rows: videoRows)
+            }
+        }
     }
     
     // MARK: - Intents

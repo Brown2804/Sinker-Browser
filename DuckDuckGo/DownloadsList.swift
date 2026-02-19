@@ -28,9 +28,14 @@ struct DownloadsList: View {
 
     var body: some View {
         NavigationView {
-            listOrEmptyState
-                .navigationBarTitle(Text(UserText.downloadsScreenTitle), displayMode: .inline)
-                .navigationBarItems(trailing: doneButton)
+            VStack(spacing: 0) {
+                if viewModel.hasAnyDownloads {
+                    filterPicker
+                }
+                listOrEmptyState
+            }
+            .navigationBarTitle(Text(UserText.downloadsScreenTitle), displayMode: .inline)
+            .navigationBarItems(trailing: doneButton)
         }
         .navigationViewStyle(.stack)
         .alert(item: $selectedRowModelToCancel) { rowModel in
@@ -38,6 +43,18 @@ struct DownloadsList: View {
         }
     }
     
+    private var filterPicker: some View {
+        Picker("Filter", selection: $viewModel.selectedFilter) {
+            ForEach(DownloadsListFilter.allCases, id: \.self) { filter in
+                Text(filter.title).tag(filter)
+            }
+        }
+        .pickerStyle(.segmented)
+        .padding(.horizontal, 20)
+        .padding(.top, 8)
+        .padding(.bottom, 4)
+    }
+
     private var doneButton: some View {
         Button(action: {
             presentationMode.wrappedValue.dismiss()
@@ -55,11 +72,20 @@ struct DownloadsList: View {
         }
     }
     
+    private var emptyStateText: String {
+        switch viewModel.selectedFilter {
+        case .all:
+            return UserText.emptyDownloads
+        case .videos:
+            return "No video files yet"
+        }
+    }
+
     private var emptyState: some View {
         VStack {
             Spacer()
                 .frame(height: 32)
-            Text(UserText.emptyDownloads)
+            Text(emptyStateText)
                 .font(Font(uiFont: Const.Font.emptyState))
                 .foregroundColor(.emptyState)
             Spacer()
