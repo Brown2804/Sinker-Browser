@@ -54,22 +54,68 @@
         return src;
     }
 
+    function looksLikeDirectVideoUrl(url) {
+        if (!url || !url.startsWith('http')) {
+            return false;
+        }
+
+        const lower = url.toLowerCase();
+        return lower.includes('.m3u8') ||
+               lower.includes('.mp4') ||
+               lower.includes('.m4v') ||
+               lower.includes('mime=video') ||
+               lower.includes('video/mp4') ||
+               lower.includes('application/vnd.apple.mpegurl');
+    }
+
+    function resolveBlobSource(video) {
+        // 1) Try source tags first.
+        const sources = video.getElementsByTagName('source');
+        for (let i = 0; i < sources.length; i += 1) {
+            const candidate = sources[i].src;
+            if (looksLikeDirectVideoUrl(candidate)) {
+                return candidate;
+            }
+        }
+
+        // 2) Heuristic: recent network resources from Performance API.
+        if (window.performance && typeof window.performance.getEntriesByType === 'function') {
+            const resources = window.performance.getEntriesByType('resource');
+            const maxScan = Math.min(resources.length, 250);
+            for (let i = resources.length - 1; i >= resources.length - maxScan; i -= 1) {
+                const entry = resources[i];
+                if (!entry || !entry.name) {
+                    continue;
+                }
+                if (looksLikeDirectVideoUrl(entry.name)) {
+                    return entry.name;
+                }
+            }
+        }
+
+        return null;
+    }
+
     function postVideo(video) {
         const src = getVideoSrc(video);
         if (!isAllowedUrl(src)) {
             return;
         }
 
+        const resolvedSrc = src.startsWith('blob:') ? resolveBlobSource(video) : null;
+        const dedupeKey = resolvedSrc || src;
+
         const now = Date.now();
-        if (src === lastSentSrc && (now - lastSentAt) < THROTTLE_MS) {
+        if (dedupeKey === lastSentSrc && (now - lastSentAt) < THROTTLE_MS) {
             return;
         }
-        lastSentSrc = src;
+        lastSentSrc = dedupeKey;
         lastSentAt = now;
 
         const payload = {
             action: 'videoDetected',
             src,
+            resolvedSrc: resolvedSrc || undefined,
             title: document.title || 'Unknown Video',
             referrer: window.location.href
         };

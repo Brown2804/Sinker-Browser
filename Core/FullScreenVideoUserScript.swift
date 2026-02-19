@@ -33,8 +33,10 @@ public final class FullScreenVideoUserScript: NSObject, UserScript {
         static let action = "action"
         static let videoDetected = "videoDetected"
         static let src = "src"
+        static let resolvedSrc = "resolvedSrc"
         static let title = "title"
         static let referrer = "referrer"
+        static let originalBlobSrc = "originalBlobSrc"
     }
 
     private let logger = Logger(subsystem: "com.duckduckgo.ios", category: "SinkerVideo")
@@ -53,27 +55,44 @@ public final class FullScreenVideoUserScript: NSObject, UserScript {
               let body = message.body as? [String: Any],
               let action = body[Keys.action] as? String,
               action == Keys.videoDetected,
-              let src = body[Keys.src] as? String,
-              let url = URL(string: src),
-              let scheme = url.scheme?.lowercased(),
-              ["http", "https", "blob"].contains(scheme)
+              let incomingSrc = body[Keys.src] as? String,
+              let incomingURL = URL(string: incomingSrc),
+              let incomingScheme = incomingURL.scheme?.lowercased(),
+              ["http", "https", "blob"].contains(incomingScheme)
         else {
             return
+        }
+
+        var finalSrc = incomingSrc
+        var originalBlobSrc: String?
+
+        if incomingScheme == "blob",
+           let resolvedSrc = body[Keys.resolvedSrc] as? String,
+           let resolvedURL = URL(string: resolvedSrc),
+           let resolvedScheme = resolvedURL.scheme?.lowercased(),
+           ["http", "https"].contains(resolvedScheme) {
+            finalSrc = resolvedSrc
+            originalBlobSrc = incomingSrc
         }
 
         let title = body[Keys.title] as? String ?? "Unknown Video"
         let referrer = body[Keys.referrer] as? String ?? ""
 
-        logger.debug("Detected video source: \(src, privacy: .public)")
+        logger.debug("Detected video source: \(finalSrc, privacy: .public)")
+
+        var userInfo: [String: String] = [
+            Keys.src: finalSrc,
+            Keys.title: title,
+            Keys.referrer: referrer
+        ]
+        if let originalBlobSrc {
+            userInfo[Keys.originalBlobSrc] = originalBlobSrc
+        }
 
         NotificationCenter.default.post(
             name: .sinkerVideoDetected,
             object: nil,
-            userInfo: [
-                Keys.src: src,
-                Keys.title: title,
-                Keys.referrer: referrer
-            ]
+            userInfo: userInfo
         )
     }
 }
