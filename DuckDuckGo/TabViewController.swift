@@ -2369,14 +2369,25 @@ extension TabViewController {
             return
         }
 
-        let filename = url.lastPathComponent.isEmpty ? "video.mp4" : url.lastPathComponent
         let mimeType: String?
+        let defaultExtension: String
         if src.contains(".m3u8") {
             mimeType = "application/vnd.apple.mpegurl"
-        } else if src.contains(".mp4") {
-            mimeType = "video/mp4"
+            defaultExtension = ".m3u8"
         } else {
-            mimeType = nil
+            mimeType = src.contains(".mp4") ? "video/mp4" : nil
+            defaultExtension = ".mp4"
+        }
+
+        let rawTitle = (notification.userInfo?["title"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let hasUsableURLFilename = !url.lastPathComponent.isEmpty && url.lastPathComponent != "/"
+        let filename: String
+        if hasUsableURLFilename {
+            filename = url.lastPathComponent
+        } else if let rawTitle, !rawTitle.isEmpty {
+            filename = rawTitle + defaultExtension
+        } else {
+            filename = "video" + defaultExtension
         }
 
         let response = URLResponse(url: url,
