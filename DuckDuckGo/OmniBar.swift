@@ -38,6 +38,7 @@ class OmniBar: UIView {
     enum AccessoryType {
          case share
          case chat
+         case download
      }
 
     public static let didLayoutNotification = Notification.Name("com.duckduckgo.app.OmniBarDidLayout")
@@ -91,6 +92,8 @@ class OmniBar: UIView {
                 accessoryButton.setImage(UIImage(named: "AIChat-24"), for: .normal)
             case .share:
                 accessoryButton.setImage(UIImage(named: "Share-24"), for: .normal)
+            case .download:
+                accessoryButton.setImage(UIImage(named: "Downloads-24"), for: .normal)
             }
         }
     }

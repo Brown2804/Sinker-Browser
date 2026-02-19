@@ -125,6 +125,8 @@ class MainViewController: UIViewController {
     private var vpnCancellables = Set<AnyCancellable>()
     private var feedbackCancellable: AnyCancellable?
     private var aiChatCancellables = Set<AnyCancellable>()
+    private var sinkerAccessoryVisibleUntil: Date?
+    private var sinkerAccessoryResetWorkItem: DispatchWorkItem?
 
     let subscriptionFeatureAvailability: SubscriptionFeatureAvailability
     private let subscriptionCookieManager: SubscriptionCookieManaging
@@ -349,6 +351,7 @@ class MainViewController: UIViewController {
         subscribeToNetworkProtectionEvents()
         subscribeToUnifiedFeedbackNotifications()
         subscribeToAIChatSettingsEvents()
+        registerForSinkerAccessoryNotifications()
 
         findInPageView.delegate = self
         findInPageBottomLayoutConstraint.constant = 0
@@ -1145,7 +1148,7 @@ class MainViewController: UIViewController {
 
     private func refreshOmniBar() {
         updateOmniBarLoadingState()
-        viewCoordinator.omniBar.updateAccessoryType(omnibarAccessoryHandler.omnibarAccessory(for: currentTab?.url))
+        applyOmniBarAccessoryType()
 
         guard let tab = currentTab, tab.link != nil else {
             viewCoordinator.omniBar.stopBrowsing()
@@ -1163,6 +1166,37 @@ class MainViewController: UIViewController {
         }
 
         viewCoordinator.omniBar.startBrowsing()
+    }
+
+    private func applyOmniBarAccessoryType() {
+        if let visibleUntil = sinkerAccessoryVisibleUntil,
+           visibleUntil > Date() {
+            viewCoordinator.omniBar.updateAccessoryType(.download)
+        } else {
+            viewCoordinator.omniBar.updateAccessoryType(omnibarAccessoryHandler.omnibarAccessory(for: currentTab?.url))
+        }
+    }
+
+    private func registerForSinkerAccessoryNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onSinkerVideoDetectedForAccessory),
+                                               name: .sinkerVideoDetected,
+                                               object: nil)
+    }
+
+    @objc private func onSinkerVideoDetectedForAccessory(_ notification: Notification) {
+        sinkerAccessoryVisibleUntil = Date().addingTimeInterval(90)
+        sinkerAccessoryResetWorkItem?.cancel()
+
+        let resetWorkItem = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            self.sinkerAccessoryVisibleUntil = nil
+            self.applyOmniBarAccessoryType()
+        }
+        sinkerAccessoryResetWorkItem = resetWorkItem
+
+        applyOmniBarAccessoryType()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 90, execute: resetWorkItem)
     }
 
     private func updateOmniBarLoadingState() {
@@ -2133,6 +2167,10 @@ extension MainViewController: OmniBarDelegate {
             guard let link = currentTab?.link else { return }
             Pixel.fire(pixel: .addressBarShare)
             currentTab?.onShareAction(forLink: link, fromView: viewCoordinator.omniBar.accessoryButton)
+        case .download:
+            Pixel.fire(pixel: .downloadsListOpened,
+                       withAdditionalParameters: [PixelParameters.originatedFromMenu: "0"])
+            segueToDownloads()
         }
     }
 
@@ -2193,7 +2231,7 @@ extension MainViewController: OmniBarDelegate {
     /// When the keyboard is dismissed we'll apply the previous rule to define the accessory button back to whatever it was
     func onDidEndEditing() {
         if featureFlagger.isFeatureOn(.aiChatNewTabPage) {
-            omniBar.updateAccessoryType(omnibarAccessoryHandler.omnibarAccessory(for: currentTab?.url))
+            applyOmniBarAccessoryType()
         }
     }
 }
