@@ -464,7 +464,6 @@
 		838306E320C733010045E854 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 838306E120C733010045E854 /* InfoPlist.strings */; };
 		8390446F20BDCE10006461CD /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8390446E20BDCE10006461CD /* ShareViewController.swift */; };
 		8390447220BDCE10006461CD /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8390447020BDCE10006461CD /* MainInterface.storyboard */; };
-		8390447620BDCE10006461CD /* ShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 8390446C20BDCE10006461CD /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		83BE9BC3215D69C1009844D9 /* AppConfigurationFetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83BE9BC2215D69C1009844D9 /* AppConfigurationFetch.swift */; };
 		83E2D2B2253CC16B005605F5 /* httpsMobileV2Bloom.bin in Resources */ = {isa = PBXBuildFile; fileRef = 83E2D2AF253CC16B005605F5 /* httpsMobileV2Bloom.bin */; };
 		83E2D2B3253CC16B005605F5 /* httpsMobileV2FalsePositives.json in Resources */ = {isa = PBXBuildFile; fileRef = 83E2D2B0253CC16B005605F5 /* httpsMobileV2FalsePositives.json */; };
@@ -496,7 +495,6 @@
 		8512EA5124ED30D20073EE19 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8512EA5024ED30D20073EE19 /* SwiftUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8512EA5424ED30D20073EE19 /* Widgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8512EA5324ED30D20073EE19 /* Widgets.swift */; };
 		8512EA5724ED30D30073EE19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8512EA5624ED30D30073EE19 /* Assets.xcassets */; };
-		8512EA5D24ED30D30073EE19 /* WidgetsExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 8512EA4D24ED30D20073EE19 /* WidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		8512EA9D24EEA6820073EE19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F143C2B11E49D78C00CFDE3A /* Assets.xcassets */; };
 		851481882A600EFC00ABC65F /* RemoteMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 851481872A600EFC00ABC65F /* RemoteMessaging */; };
 		851624C22B95F8BD002D5CD7 /* HistoryCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 851624C12B95F8BD002D5CD7 /* HistoryCapture.swift */; };
@@ -551,7 +549,6 @@
 		8546A54A2A672959003929BF /* MainViewController+Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8546A5492A672959003929BF /* MainViewController+Email.swift */; };
 		85482D8D2462DCD100EDEDD1 /* ActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85482D8C2462DCD100EDEDD1 /* ActionViewController.swift */; };
 		85482D902462DCD100EDEDD1 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85482D8E2462DCD100EDEDD1 /* MainInterface.storyboard */; };
-		85482D942462DCD100EDEDD1 /* OpenAction.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 85482D882462DCD100EDEDD1 /* OpenAction.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		85482D992462F1C600EDEDD1 /* ActionIcons.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85482D982462F1C600EDEDD1 /* ActionIcons.xcassets */; };
 		854858E32937BC550063610B /* CollectionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE411F22857C4A30003FE64 /* CollectionExtension.swift */; };
 		8548D95E25262B1B005AAE49 /* ViewHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8548D95D25262B1B005AAE49 /* ViewHighlighter.swift */; };
@@ -1055,7 +1052,6 @@
 		C1EA86622C74CB8B00E8604D /* SyncPromoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EA86612C74CB8B00E8604D /* SyncPromoViewModel.swift */; };
 		C1EF5B232CC0457B002980E6 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1EF5B222CC0457B002980E6 /* AuthenticationServices.framework */; };
 		C1EF5B262CC0457B002980E6 /* CredentialProviderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EF5B252CC0457B002980E6 /* CredentialProviderViewController.swift */; };
-		C1EF5B2E2CC0457B002980E6 /* AutofillCredentialProvider.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C1EF5B212CC0457B002980E6 /* AutofillCredentialProvider.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C1F04B642D1068DC003DEF05 /* SubscriptionPagesUseSubscriptionFeatureFreeTrialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F04B632D1068DC003DEF05 /* SubscriptionPagesUseSubscriptionFeatureFreeTrialsTests.swift */; };
 		C1F341C52A6924000032057B /* EmailAddressPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F341C42A6924000032057B /* EmailAddressPromptView.swift */; };
 		C1F341C72A6924100032057B /* EmailAddressPromptViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F341C62A6924100032057B /* EmailAddressPromptViewModel.swift */; };
@@ -1464,20 +1460,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		83E282AC20BC1840005FBE88 /* Embed App Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				C1EF5B2E2CC0457B002980E6 /* AutofillCredentialProvider.appex in Embed App Extensions */,
-				85482D942462DCD100EDEDD1 /* OpenAction.appex in Embed App Extensions */,
-				8512EA5D24ED30D30073EE19 /* WidgetsExtension.appex in Embed App Extensions */,
-				8390447620BDCE10006461CD /* ShareExtension.appex in Embed App Extensions */,
-			);
-			name = "Embed App Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		F10307651E7D5B2C0059FEC7 /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7399,13 +7381,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				B6DFE6D82BC7E49800A9CE59 /* PBXTargetDependency */,
 				F143C2EA1E4A4CD400CFDE3A /* PBXTargetDependency */,
-				8390447520BDCE10006461CD /* PBXTargetDependency */,
-				85482D932462DCD100EDEDD1 /* PBXTargetDependency */,
-				8512EA5C24ED30D30073EE19 /* PBXTargetDependency */,
-				02FFD7BC2A1FC8BE007BD7D1 /* PBXTargetDependency */,
-				C1EF5B2D2CC0457B002980E6 /* PBXTargetDependency */,
 			);
 			name = DuckDuckGo;
 			packageProductDependencies = (
@@ -8171,25 +8147,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"$SOURCE_ROOT/scripts/assert_xcode_version.sh\"\n";
-		};
-		EE9286812A812BD2002B7818 /* Embed PacketTunnelProvider */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Embed PacketTunnelProvider";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Conditionally embeds PacketTunnelProvider extension for Debug and Alpha builds.\n\n# Conditionally embeds the PacketTunnelProvider extension for debug builds.\\n# To be moved to the Embed App Extensions phase on release.\n\nif [ \"${CONFIGURATION}\" = \"Debug\" ] || [ \"${CONFIGURATION}\" = \"Release\" ] || [ \"${CONFIGURATION}\" = \"Alpha\" ] || [ \"${CONFIGURATION}\" = \"Alpha Debug\" ]; then\n# Copy the extension    \n    rsync -r --copy-links \"${CONFIGURATION_BUILD_DIR}/PacketTunnelProvider.appex\" \"${CONFIGURATION_BUILD_DIR}/${PLUGINS_FOLDER_PATH}\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -10534,6 +10491,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = HKE973VLUW;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -10596,6 +10554,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = HKE973VLUW;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -10626,10 +10585,10 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = DuckDuckGo/DuckDuckGo.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = "";
+				DEVELOPMENT_TEAM = 7S4G9J888Z;
 				INFOPLIST_FILE = DuckDuckGo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -10637,6 +10596,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_VERSION = 5.0;
 			};
@@ -10650,8 +10610,8 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = DuckDuckGo/DuckDuckGo.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 7S4G9J888Z;
 				INFOPLIST_FILE = DuckDuckGo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -10659,6 +10619,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_VERSION = 5.0;
 			};
@@ -11288,6 +11249,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = HKE973VLUW;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -11323,10 +11285,10 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = DuckDuckGo/DuckDuckGoAlpha.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = "";
+				DEVELOPMENT_TEAM = 7S4G9J888Z;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -11338,6 +11300,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG ALPHA";
 				SWIFT_VERSION = 5.0;
 			};
@@ -11665,6 +11628,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = HKE973VLUW;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -11696,10 +11660,10 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = DuckDuckGo/DuckDuckGoAlpha.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = "";
+				DEVELOPMENT_TEAM = 7S4G9J888Z;
 				INFOPLIST_FILE = DuckDuckGo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -11708,6 +11672,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.brown2804.sinker.alpha;
 				PRODUCT_MODULE_NAME = DuckDuckGo;
 				PRODUCT_NAME = "$(TARGET_NAME)-Alpha";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = ALPHA;
 				SWIFT_VERSION = 5.0;
 			};
