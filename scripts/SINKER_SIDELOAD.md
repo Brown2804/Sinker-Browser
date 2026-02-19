@@ -13,10 +13,22 @@ Default values:
 - IPA export path: `build/Sinker-ipa`
 - Export options: `adhocExportOptions.plist`
 
-## 2) Custom export options
+## 2) Custom export/signing options
 
 ```bash
 EXPORT_OPTIONS_PLIST=alphaAdhocExportOptions.plist scripts/build_sinker_ipa.sh
+```
+
+Use your own Apple Team for automatic signing attempt:
+
+```bash
+TEAM_ID=<YOUR_TEAM_ID> scripts/build_sinker_ipa.sh
+```
+
+If you already installed profiles manually and don't want Xcode auto-provision updates:
+
+```bash
+TEAM_ID=<YOUR_TEAM_ID> ALLOW_PROVISIONING_UPDATES=0 scripts/build_sinker_ipa.sh
 ```
 
 ## 3) Install to iPad (AltStore/SideStore)
