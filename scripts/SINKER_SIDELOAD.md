@@ -1,10 +1,17 @@
 # Sinker iOS Sideload Build
 
-## 1) Archive + IPA Export
+## 1) (One-time) Prepare project signing for your own bundle/team
 
 ```bash
 cd ~/Development/Sinker/DuckDuckGo-iOS
-scripts/build_sinker_ipa.sh
+BASE_BUNDLE_ID=com.brown2804.sinker TEAM_ID=<YOUR_TEAM_ID> scripts/prepare_sinker_signing.sh
+```
+
+## 2) Archive + IPA Export
+
+```bash
+cd ~/Development/Sinker/DuckDuckGo-iOS
+TEAM_ID=<YOUR_TEAM_ID> scripts/build_sinker_ipa.sh
 ```
 
 Default values:
@@ -13,7 +20,7 @@ Default values:
 - IPA export path: `build/Sinker-ipa`
 - Export options: `adhocExportOptions.plist`
 
-## 2) Custom export/signing options
+## 3) Custom export/signing options
 
 ```bash
 EXPORT_OPTIONS_PLIST=alphaAdhocExportOptions.plist scripts/build_sinker_ipa.sh
@@ -37,7 +44,7 @@ If you intentionally want to skip keychain signing preflight checks:
 SKIP_SIGNING_PREFLIGHT=1 scripts/build_sinker_ipa.sh
 ```
 
-## 3) Install to iPad (AltStore/SideStore)
+## 4) Install to iPad (AltStore/SideStore)
 
 1. Open AltStore/SideStore.
 2. Select the generated `.ipa` from `build/Sinker-ipa/`.
