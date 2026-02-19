@@ -32,7 +32,7 @@ class DownloadManager {
     }
     
     private enum Constants {
-        static var downloadsDirectoryName = "Downloads"
+        static var downloadsDirectoryName = "Sinker"
     }
     
     private(set) var downloadList = Set<Download>()
