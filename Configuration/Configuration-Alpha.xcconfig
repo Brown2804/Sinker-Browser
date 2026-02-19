@@ -23,7 +23,7 @@
 #include "BuildNumber.xcconfig"
 
 // The app bundle identifier
-APP_ID = com.duckduckgo.mobile.ios.alpha
+APP_ID = com.brown2804.sinker.alpha
 
 // A prefix for group ids. Must start with "group.".
 GROUP_ID_PREFIX = group.com.duckduckgo.alpha
