@@ -21,7 +21,7 @@ cp "${PBXPROJ}" "${PBXPROJ}.bak.$(date +%Y%m%d-%H%M%S)"
 perl -pi -e "s/com\\.duckduckgo\\.mobile\\.ios\\.alpha/${BASE_BUNDLE_ID}.alpha/g; s/com\\.duckduckgo\\.mobile\\.ios/${BASE_BUNDLE_ID}/g" "${PBXPROJ}"
 
 # 2) Remove fixed provisioning profile specifiers to allow automatic signing.
-perl -ni -e 'print unless /PROVISIONING_PROFILE_SPECIFIER\[sdk=iphoneos\*\]/' "${PBXPROJ}"
+perl -ni -e 'print unless /PROVISIONING_PROFILE_SPECIFIER/' "${PBXPROJ}"
 
 # 3) Rewrite DEVELOPMENT_TEAM entries.
 if [[ -n "${TEAM_ID}" ]]; then
@@ -31,7 +31,10 @@ else
   perl -pi -e 's/DEVELOPMENT_TEAM = [A-Z0-9]+;/DEVELOPMENT_TEAM = "";/g; s/"DEVELOPMENT_TEAM\[sdk=iphoneos\*\]" = [A-Z0-9]+;/"DEVELOPMENT_TEAM[sdk=iphoneos*]" = "";/g' "${PBXPROJ}"
 fi
 
-# 4) Keep xcconfig app ids aligned.
+# 4) Normalize signing style/identity for automatic development signing.
+perl -pi -e 's/CODE_SIGN_STYLE = Manual;/CODE_SIGN_STYLE = Automatic;/g; s/CODE_SIGN_IDENTITY = "iPhone Distribution";/CODE_SIGN_IDENTITY = "Apple Development";/g; s/CODE_SIGN_IDENTITY = "iPhone Developer";/CODE_SIGN_IDENTITY = "Apple Development";/g; s/"CODE_SIGN_IDENTITY\[sdk=iphoneos\*\]" = "iPhone Distribution";/"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";/g; s/"CODE_SIGN_IDENTITY\[sdk=iphoneos\*\]" = "iPhone Developer";/"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";/g' "${PBXPROJ}"
+
+# 5) Keep xcconfig app ids aligned.
 if [[ -f "${DEV_CONFIG}" ]]; then
   perl -pi -e "s/^APP_ID\s*=\s*.*$/APP_ID = ${BASE_BUNDLE_ID}/" "${DEV_CONFIG}"
 fi
