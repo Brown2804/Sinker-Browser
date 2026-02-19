@@ -22,6 +22,12 @@ import Foundation
 import WebKit
 
 class URLDownloadSession: NSObject, DownloadSession {
+
+    enum Mode {
+        case ephemeral
+        case background
+    }
+
     private var session: URLSession?
     private var cookieStore: WKHTTPCookieStore?
     private(set) var task: URLSessionDownloadTask?
@@ -32,17 +38,32 @@ class URLDownloadSession: NSObject, DownloadSession {
         task?.state == .running
     }
 
-    internal init(_ url: URL, session: URLSession? = nil, cookieStore: WKHTTPCookieStore? = nil) {
+    internal init(_ url: URL,
+                  session: URLSession? = nil,
+                  cookieStore: WKHTTPCookieStore? = nil,
+                  mode: Mode = .ephemeral) {
         self.cookieStore = cookieStore
         super.init()
+
         if let session = session {
             self.session = session
         } else {
-            let configuration = URLSessionConfiguration.ephemeral
+            let configuration: URLSessionConfiguration
+            switch mode {
+            case .ephemeral:
+                configuration = .ephemeral
+            case .background:
+                configuration = .background(withIdentifier: "com.sinker.download.\(UUID().uuidString)")
+                configuration.sessionSendsLaunchEvents = true
+                configuration.isDiscretionary = false
+                configuration.waitsForConnectivity = true
+            }
+
             let userAgent = DefaultUserAgentManager.shared.userAgent(isDesktop: false, url: url)
             configuration.httpAdditionalHeaders = ["user-agent": userAgent]
             self.session = URLSession(configuration: configuration, delegate: self, delegateQueue: .main)
         }
+
         self.task = self.session?.downloadTask(with: url)
     }
 

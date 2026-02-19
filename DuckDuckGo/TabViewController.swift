@@ -2385,7 +2385,7 @@ extension TabViewController {
                                    textEncodingName: nil)
 
         let cookieStore = webView.configuration.websiteDataStore.httpCookieStore
-        let downloadSession = URLDownloadSession(url, cookieStore: cookieStore)
+        let downloadSession = URLDownloadSession(url, cookieStore: cookieStore, mode: .background)
         let downloadManager = AppDependencyProvider.shared.downloadManager
 
         guard let download = downloadManager.makeDownload(response: response,
