@@ -76,7 +76,17 @@ class DownloadsListViewModel: ObservableObject {
     private func applyFilter() {
         switch selectedFilter {
         case .all:
-            sections = allSections
+            sections = allSections.map { section in
+                let sortedRows = section.rows.sorted { lhs, rhs in
+                    if lhs.isVideo == rhs.isVideo {
+                        return lhs.filename.localizedCaseInsensitiveCompare(rhs.filename) == .orderedAscending
+                    }
+                    return lhs.isVideo && !rhs.isVideo
+                }
+                return DownloadsListSectionViewModel(date: section.date,
+                                                     header: section.header,
+                                                     rows: sortedRows)
+            }
         case .videos:
             sections = allSections.compactMap { section in
                 let videoRows = section.rows.filter { $0.isVideo }
