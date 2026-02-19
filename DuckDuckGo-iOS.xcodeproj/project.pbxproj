@@ -7395,8 +7395,6 @@
 				F143C2F01E4A4CD400CFDE3A /* Embed Frameworks */,
 				37B4F3D329D2C84400758752 /* Copy GRDB framework */,
 				F10307651E7D5B2C0059FEC7 /* Copy Frameworks */,
-				83E282AC20BC1840005FBE88 /* Embed App Extensions */,
-				EE9286812A812BD2002B7818 /* Embed PacketTunnelProvider */,
 			);
 			buildRules = (
 			);
