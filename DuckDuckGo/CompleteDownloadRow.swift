@@ -39,7 +39,7 @@ struct CompleteDownloadRow: View {
                 self.isPreviewPresented = true
             } label: {
                 VStack(alignment: .leading) {
-                    Text(rowModel.filename)
+                    Text(rowModel.displayFilename)
                         .font(Font(uiFont: Const.Font.filename))
                         .foregroundColor(.filename)
                         .lineLimit(2)

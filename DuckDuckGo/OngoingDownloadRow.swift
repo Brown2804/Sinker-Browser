@@ -28,7 +28,7 @@ struct OngoingDownloadRow: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("\(rowModel.filename)")
+                Text("\(rowModel.displayFilename)")
                     .font(Font(uiFont: Const.Font.filename))
                     .foregroundColor(.filename)
                     .lineLimit(2)

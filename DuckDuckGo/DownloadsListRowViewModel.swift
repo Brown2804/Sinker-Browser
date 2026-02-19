@@ -20,12 +20,28 @@
 import Foundation
 
 class DownloadsListRowViewModel: Identifiable, ObservableObject {
-    
+
     var id: String { filename }
     let filename: String
-    
+    let isVideo: Bool
+
+    var displayFilename: String {
+        isVideo ? "🎬 \(filename)" : filename
+    }
+
     internal init(filename: String) {
         self.filename = filename
+        self.isVideo = Self.isLikelyVideoFilename(filename)
+    }
+
+    private static func isLikelyVideoFilename(_ filename: String) -> Bool {
+        let lower = filename.lowercased()
+        return lower.hasSuffix(".mp4") ||
+               lower.hasSuffix(".m4v") ||
+               lower.hasSuffix(".mov") ||
+               lower.hasSuffix(".webm") ||
+               lower.hasSuffix(".mkv") ||
+               lower.hasSuffix(".m3u8")
     }
 }
 
